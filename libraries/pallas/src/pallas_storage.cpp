@@ -137,8 +137,18 @@ class File {
     if (numberOpenFiles)
       numberOpenFiles--;
   };
-  void read(void* ptr, size_t size, size_t n) const { _pallas_fread(ptr, size, n, file); }
-  void write(void* ptr, size_t size, size_t n) const { _pallas_fwrite(ptr, size, n, file); }
+  void read(void* ptr, size_t size, size_t n) const {
+    if (size > 0) {
+      _pallas_fread(ptr, size, n, file);
+    }
+  }
+
+  void write(void* ptr, size_t size, size_t n) const {
+    if (size > 0) {
+      _pallas_fwrite(ptr, size, n, file);
+    }
+  }
+
   explicit File(const char* path, const char* mode = nullptr) {
     this->path = strdup(path);
     if (mode) {
@@ -966,6 +976,9 @@ static void pallasStoreEvent(pallas::EventSummary& event,
       std::cout << event.timestamps->to_string() << std::endl;
   }
   eventFile.write(&event.event, sizeof(pallas::Event), 1);
+  if (event.event.record == pallas::PALLAS_EVENT_MAX_ID) {
+    return;
+  }
   eventFile.write(&event.attribute_pos, sizeof(event.attribute_pos), 1);
   if (event.attribute_pos > 0) {
     pallas_log(pallas::DebugLevel::Debug, "\t\tStore %lu attributes\n", event.attribute_pos);
@@ -986,6 +999,9 @@ static void pallasReadEvent(pallas::EventSummary& event,
                             const char* durationFileName,
                             pallas::ParameterHandler& parameter_handler) {
   eventFile.read(&event.event, sizeof(pallas::Event), 1);
+  if (event.event.record == pallas::PALLAS_EVENT_MAX_ID) {
+    return;
+  }
   eventFile.read(&event.attribute_buffer_size, sizeof(event.attribute_buffer_size), 1);
   event.attribute_pos = 0;
   event.attribute_buffer = nullptr;
@@ -1022,6 +1038,9 @@ static void pallasStoreSequence(pallas::Sequence& sequence,
     }
     size_t size = sequence.size();
     sequenceFile.write(&size, sizeof(size), 1);
+    if (size == 0) {
+      return;
+    }
     sequenceFile.write(sequence.tokens.data(), sizeof(sequence.tokens[0]), sequence.size());
 #ifdef DEBUG
     for (const auto& t : sequence.tokens) {
@@ -1053,6 +1072,10 @@ static void pallasReadSequence(pallas::Sequence& sequence,
                                pallas::ParameterHandler& parameter_handler) {
     size_t size;
     sequenceFile.read(&size, sizeof(size), 1);
+    // catch empty sequence
+    if (size == 0) {
+      return;
+    }
     sequence.tokens.resize(size);
     sequenceFile.read(sequence.tokens.data(), sizeof(pallas::Token), size);
     if (STORE_TIMESTAMPS) {
