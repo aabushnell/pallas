@@ -75,6 +75,7 @@ target_compile_options(pallas
         -D_GNU_SOURCE
         PRIVATE
         -Wall -Wextra ${WARNINGS}
+        -g -O0
 )
 message("Warning list: ${WARNINGS}")
 
