@@ -544,11 +544,11 @@ void ThreadWriter::recordExitFunction() {
         getLastSequenceDuration(seq, 0);
 #ifdef DEBUG
     const pallas_duration_t sequence_duration = last_timestamp - sequence_start_timestamp[cur_depth];
-    pallas_log(DebugLevel::Debug, "Computed duration = %lu\nSequence duration = %lu\n", computed_duration, sequence_duration);
+    pallas_log(DebugLevel::Debug, "Computed duration = %llu\nSequence duration = %llu\n", computed_duration, sequence_duration);
     pallas_assert(computed_duration == sequence_duration);
 #endif
 
-    pallas_log(DebugLevel::Debug, "Exiting function, closing %s, start=%lu\n", thread->getTokenString(seq_id).c_str(), sequence_start_timestamp[cur_depth]);
+    pallas_log(DebugLevel::Debug, "Exiting function, closing %s, start=%llu\n", thread->getTokenString(seq_id).c_str(), sequence_start_timestamp[cur_depth]);
     seq->timestamps->add(sequence_start_timestamp[cur_depth]);
     seq->exclusive_durations->add(computed_exclusive_duration);
     seq->durations->add(computed_duration);
@@ -589,7 +589,7 @@ size_t ThreadWriter::storeEvent(enum EventType event_type, TokenId event_id, pal
 
     EventSummary* es = &thread->events[event_id];
     size_t occurrence_index = es->nb_occurences++;
-    pallas_log(DebugLevel::Debug, "storeEvent: %s @ %lu\n", thread->getTokenString(token).c_str(), ts);
+    pallas_log(DebugLevel::Debug, "storeEvent: %s @ %llu\n", thread->getTokenString(token).c_str(), ts);
     storeTimestamp(es, ts);
     storeToken(token, occurrence_index);
 
