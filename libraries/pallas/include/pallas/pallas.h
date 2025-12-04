@@ -774,6 +774,7 @@ template <typename T> void doubleMemorySpaceConstructor(T*& originalArray, size_
   T* newArray = new T[counter * 2];
   // Copy without destructing
   std::memcpy(newArray, originalArray, counter * sizeof(T));
+  std::memset(originalArray, 0, counter * sizeof(T));
 
   // Create the new objects by calling there constructors
   for (size_t i = counter; i < counter * 2; ++i) {
