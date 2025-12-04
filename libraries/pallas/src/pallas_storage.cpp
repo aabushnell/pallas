@@ -1011,7 +1011,7 @@ static void pallasReadEvent(pallas::EventSummary& event,
   }
   event.timestamps = new pallas::LinkedVector(eventFile.file, durationFileName, parameter_handler);
   event.nb_occurences = event.timestamps->size;
-    pallas_log(pallas::DebugLevel::Debug, "\tLoaded event %d {.nb_events=%zu}\n", event.id, event.timestamps->size);
+  pallas_log(pallas::DebugLevel::Debug, "\tLoaded event %d {.nb_events=%zu}\n", event.id, event.timestamps->size);
 }
 
 static const char* pallasGetSequenceDurationFilename(const char* base_dirname, pallas::Thread* th) {
