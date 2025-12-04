@@ -132,7 +132,7 @@ std::string Thread::getTokenString(Token token) const {
 }
 
 pallas_duration_t Thread::getDuration() const {
-  return sequences[0]->durations->at(0);
+  return sequences[sequence_root]->durations->at(0);
 }
 pallas_duration_t get_duration(PALLAS(Thread) * t) {
   return t->getDuration();
