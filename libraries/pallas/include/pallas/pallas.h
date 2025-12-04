@@ -523,6 +523,7 @@ typedef struct Thread {
     Sequence **sequences; /**< Array of pallas::Sequence recorded in this Thread. */
     size_t nb_allocated_sequences; /**< Number of blocks of size pallas:Sequence allocated in #sequences. */
     size_t nb_sequences; /**< Number of pallas::Sequence in #sequences. */
+    TokenId sequence_root; /** Id/Index of the entry point sequence of this Thread. */
 
     pallas_timestamp_t first_timestamp;
     /** Map to associate the hash of the pallas::Sequence to their id.*/
